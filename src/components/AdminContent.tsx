@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import type { Topic } from "@prisma/client";
 import type { Session } from "next-auth";
 import { api } from "~/trpc/react";
-import { NoteEditor } from "./NoteEditor";
-import { EditableNote } from "./EditableNote";
+import { NoteEditor } from "~/components/NoteEditor";
+import { EditableNote } from "~/components/EditableNote";
 
 type Props = {
   sessionData: Session | null;
 };
 
-export const Content = ({ sessionData }: Props) => {
+export const AdminContent = ({ sessionData }: Props) => {
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [newTopic, setNewTopic] = useState<string>("");
   const { data: topics, refetch: refetchTopics } = api.topic.getAll.useQuery(
@@ -48,6 +48,10 @@ export const Content = ({ sessionData }: Props) => {
   });
 
   const noTopics = topics?.length === 0;
+
+  const publicNotes = api.topic.getPublisherNotes.useQuery(undefined, {
+    enabled: sessionData?.user === undefined,
+  });
 
   useEffect(() => {
     setSelectedTopic((selectedTopic) => selectedTopic ?? topics?.[0] ?? null);

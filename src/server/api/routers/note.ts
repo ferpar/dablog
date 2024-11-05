@@ -56,5 +56,5 @@ export const noteRouter = createTRPCRouter({
           content: input.content,
         },
       });
-    }),
+    })
 });

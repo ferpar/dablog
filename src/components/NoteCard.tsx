@@ -9,7 +9,7 @@ export const NoteCard = ({
   onDelete,
   onEdit,
 }: {
-  note: Note;
+  note: Partial<Note>;
   onDelete: () => void;
   onEdit?: () => void;
 }) => {
@@ -28,11 +28,11 @@ export const NoteCard = ({
             className="collapse-title text-xl font-bold"
             style={{ cursor: "pointer" }}
           >
-            {note.title}
+            {note.title ?? "Untitled"}
           </div>
           <div className="collapse-content">
             <article className="prose lg:prose-xl">
-              <ReactMarkdown>{note.content}</ReactMarkdown>
+              <ReactMarkdown>{note.content ?? "no content"}</ReactMarkdown>
             </article>
           </div>
           <div className="card-actions mx-2 justify-end">

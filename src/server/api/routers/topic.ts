@@ -1,6 +1,8 @@
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+const publisherId = process.env.BLOG_PUBLISHER;
+
+import { createTRPCRouter, publicProcedure, protectedProcedure } from "~/server/api/trpc";
 
 export const topicRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
@@ -18,5 +20,24 @@ export const topicRouter = createTRPCRouter({
                 userId: ctx.session.user.id
             }
         })
+    }),
+
+  getPublisherNotes: publicProcedure
+    .query(async ({ ctx  }) => {
+      console.log("USER ID", publisherId)
+      return ctx.db.topic.findMany({
+        where: {
+          userId: publisherId,
+        },
+        include: {
+          notes: {
+            orderBy: {
+              createdAt: "desc",
+            },
+            skip: 0,
+            take: 1,
+          }
+        }
+      })
     })
 });
